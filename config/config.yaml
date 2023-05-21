@@ -1,0 +1,23 @@
+server:
+  appmode: "debug"
+  port: 8081
+
+redis:
+  db: redis
+  addr: 127.0.0.1:6379
+  password: 
+  db_name: 1
+
+mysql:
+  db: mysql
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  password: 123123123
+  db_name: im_demo_db
+
+mongodb:
+  db_name: im_demo_db
+  addr: 127.0.0.1
+  port: 27017
+  password: root
