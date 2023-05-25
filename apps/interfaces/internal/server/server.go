@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/marsingzhi/goim/apps/interfaces/internal/config"
+	"github.com/marsingzhi/goim/apps/interfaces/internal/router"
 	"github.com/marsingzhi/goim/pkg/common/xzgin"
 )
 
@@ -19,5 +20,6 @@ func NewServer() *server {
 }
 
 func (s *server) Run() {
+	router.RegisterRouter(s.ginServer.Engine)
 	s.ginServer.Run(s.conf.Port)
 }
