@@ -1,9 +1,9 @@
 package server
 
 import (
-	"github.com/marsingzhi/goim/apps/interfaces/internal/config"
-	"github.com/marsingzhi/goim/apps/interfaces/internal/router"
-	"github.com/marsingzhi/goim/pkg/common/xzgin"
+	"github.com/marsxingzhi/goim/apps/interfaces/internal/config"
+	"github.com/marsxingzhi/goim/apps/interfaces/internal/router"
+	"github.com/marsxingzhi/goim/pkg/common/xzgin"
 )
 
 type server struct {

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/marsingzhi/goim/apps/interfaces/internal/config"
-	"github.com/marsingzhi/goim/apps/interfaces/internal/server"
+	"github.com/marsxingzhi/goim/apps/interfaces/internal/config"
+	"github.com/marsxingzhi/goim/apps/interfaces/internal/server"
 )
 
 func main() {

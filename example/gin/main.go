@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marsingzhi/goim/pkg/common/xzgin"
-	"github.com/marsingzhi/goim/pkg/common/xzjwt"
-	"github.com/marsingzhi/goim/pkg/e"
+	"github.com/marsxingzhi/goim/pkg/common/xzgin"
+	"github.com/marsxingzhi/goim/pkg/common/xzjwt"
+	"github.com/marsxingzhi/goim/pkg/e"
 )
 
 func main() {

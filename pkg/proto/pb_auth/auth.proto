@@ -1,0 +1,29 @@
+syntax ="proto3";
+package pb_auth;
+import "pb_user/user.proto";
+option go_package = "github.com/marsxingzhi/goim/pkg/proto/pb_auth";  
+
+
+message RegisterReq {
+    int32 pltform = 1;  // 注册平台 0：unkown；1：ios；2：android；3：web
+    string nickname = 2;  // 昵称
+    string password = 3;  // 密码
+    string firstname = 4;  
+    string lastname = 5; 
+    int32 gender = 6;  // 1：男;；2：女
+    string email = 7;  // 邮箱
+    string mobile = 8;  // 手机号
+}
+
+message RegisterResp {
+  int32 code = 1;
+  string msg = 2;
+  pb_user.UserInfo user_info = 3;
+}
+
+
+
+
+service Auth {
+  rpc Register(RegisterReq)  returns(RegisterResp);
+}

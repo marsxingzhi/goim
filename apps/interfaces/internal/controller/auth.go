@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marsingzhi/goim/pkg/e"
+	"github.com/marsxingzhi/goim/pkg/e"
 )
 
 func SignIn(ctx *gin.Context) {

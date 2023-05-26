@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/marsingzhi/goim/pkg/common/xzjwt"
+	"github.com/marsxingzhi/goim/pkg/common/xzjwt"
 )
 
 func main() {
