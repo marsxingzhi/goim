@@ -5,6 +5,10 @@ import (
 	ctrl "github.com/marsxingzhi/goim/apps/interfaces/internal/controller"
 )
 
-func registerAuthRouter(group *gin.RouterGroup) {
-	group.POST("sign_in", ctrl.SignIn)
+func addRegisterRouter(group *gin.RouterGroup) {
+	group.POST("register", ctrl.Register)
+}
+
+func addLoginRouter(group *gin.RouterGroup) {
+	group.POST("login", ctrl.Login)
 }

@@ -14,7 +14,8 @@ func RegisterRouter(engine *gin.Engine) {
 
 func registerOpenRouter(group *gin.RouterGroup) {
 	authGroup := group.Group("auth")
-	registerAuthRouter(authGroup)
+	addRegisterRouter(authGroup)
+	addLoginRouter(authGroup)
 }
 
 func registerApiRouter(group *gin.RouterGroup) {

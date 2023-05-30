@@ -1,4 +1,7 @@
 package e
 
-const ECODE = "ecode"
-const EMSG = "emsg"
+const (
+	ECODE = "ecode"
+	EMSG  = "emsg"
+	DATA  = "data"
+)

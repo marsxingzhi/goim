@@ -116,7 +116,7 @@ type UnsafeAuthServer interface {
 }
 
 func RegisterAuthServer(s grpc.ServiceRegistrar, srv AuthServer) {
-	s.RegisterService(&Auth_ServiceDesc, srv)
+	s. RegisterService(&Auth_ServiceDesc, srv)
 }
 
 func _Auth_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
