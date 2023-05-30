@@ -1,0 +1,27 @@
+name: goim_api_gateway
+server_id: 1
+etcd:
+  endpoints: ["goim-etcd-01:12379","goim-etcd-02:12381","goim-etcd-03:12383"]
+  username:
+  password:
+  schema: goim
+  read_timeout: 5000
+  write_timeout: 5000
+  dial_timeout: 5000
+redis:
+  address: ["goim-redis-01:7001","goim-redis-02:7002","goim-redis-03:7003","goim-redis-04:7004"]
+  db: 0
+  password: goim2023
+  prefix: "goim:"
+mysql:
+  max_open_conns: 20
+  max_idle_conns: 10
+  max_lifetime: 120000
+  max_idle_time: 7200000
+  charset: utf8mb4
+  sources:
+    - {address: "goim-mysql-user-01:13306",username: root,password: 123123123,db: goim_user}
+    - {address: "goim-mysql-user-02:13307",username: root,password: 123123123,db: goim_user}
+  replicas:
+    - {address: "goim-mysql-user-03:13308",username: root,password: 123123123,db: goim_user}
+    - {address: "goim-mysql-user-04:13309",username: root,password: 123123123,db: goim_user}

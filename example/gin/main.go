@@ -13,11 +13,11 @@ import (
 func main() {
 	gs := xzgin.NewGinServer()
 
-	gs.Use(JwtAuth(), a())
+	//gs.Use(JwtAuth(), a())
 
 	gs.Engine.GET("/ping", Ping())
 
-	gs.Run(8081)
+	gs.Run(8100)
 }
 
 func Ping() gin.HandlerFunc {

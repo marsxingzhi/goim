@@ -8,13 +8,12 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// 配置
 type Config struct {
 	Name     string      `yam:"name"`
 	ServerID int         `yaml:"server_id"`
-	Port     int         `yaml:"port"`
 	Etcd     *conf.Etcd  `yaml:"etcd"`
 	Redis    *conf.Redis `yaml:"redis"`
+	Mysql    *conf.Mysql `yaml:"mysql"`
 }
 
 var config = new(Config)
@@ -24,7 +23,7 @@ func GetConfig() *Config {
 }
 
 func init() {
-	bytes, err := ioutil.ReadFile("./configs/api_gateway.yaml")
+	bytes, err := ioutil.ReadFile("./configs/auth.yaml")
 
 	if err != nil {
 		fmt.Println("[config] failed to read yaml file: ", err)
@@ -36,5 +35,5 @@ func init() {
 		panic(err)
 	}
 
-	fmt.Printf("[config] init successfully, and config: %+v\n", config)
+	fmt.Printf("[config] init auth cofnig successfully, and config: %+v\n", config)
 }
