@@ -1,7 +1,7 @@
 name: goim_api_gateway
 server_id: 1
 etcd:
-  endpoints: ["goim-etcd-01:12379","goim-etcd-02:12381","goim-etcd-03:12383"]
+  endpoints: ["127.0.0.1:2379","127.0.0.1:2380","127.0.0.1:2381"]     #  这是etcd集群的节点
   username:
   password:
   schema: goim
@@ -25,3 +25,19 @@ mysql:
   replicas:
     - {address: "goim-mysql-user-03:13308",username: root,password: 123123123,db: goim_user}
     - {address: "goim-mysql-user-04:13309",username: root,password: 123123123,db: goim_user}
+grpc_server:
+  name: goim_auth_server
+  server_id: 1
+  port: 6600
+  max_connection_idle: 0
+  max_connection_age: 0
+  max_connection_age_grace: 0
+  time: 7200000
+  timeout: 20000
+  connection_limit: 2000
+  streams_limit: 2000
+  max_recv_msg_size: 4096
+  credential:
+    cert_file: ./configs/tls/grpc/server.pem
+    key_file: ./configs/tls/grpc/server.key
+    enabled: true

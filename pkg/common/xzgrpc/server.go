@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"github.com/marsxingzhi/goim/pkg/common/xzetcd"
 	"github.com/marsxingzhi/goim/pkg/config"
+	"github.com/marsxingzhi/goim/pkg/utils"
+	"google.golang.org/grpc"
 	"log"
 	"net"
 	"strconv"
-
-	"google.golang.org/grpc"
 )
 
 const ttl = 10
@@ -31,8 +31,12 @@ func (gs *GrpcServer) Run(s *grpc.Server) {
 	}
 
 	// TODO 先固定
-	host := "127.0.0.1"
+	host := utils.GetServerIP()
+	fmt.Println("host: ", host)
+
 	err = xzetcd.Register(gs.etcdConf.Schema, gs.etcdConf.Endpoints, host, gs.grpcConf.Port, gs.grpcConf.Name, ttl)
+
+	//err = xzetcd.RegisterV2(gs.etcdConf.Schema, host, gs.grpcConf.Port, gs.grpcConf.Name, ttl)
 	if err != nil {
 		fmt.Println("[xzgrpc] faield to register grpc to etcd: ", err)
 		return

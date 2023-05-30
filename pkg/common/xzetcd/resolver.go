@@ -167,12 +167,3 @@ func newResolver(opt *config.GrpcDialOption) (*Resolver, error) {
 
 	return nil, nil
 }
-
-//func exists(addrs []resolver.Address, path string) bool {
-//	for _, v := range addrs {
-//		if v.Addr == path {
-//			return true
-//		}
-//	}
-//	return false
-//}

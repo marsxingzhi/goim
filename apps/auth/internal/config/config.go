@@ -9,11 +9,12 @@ import (
 )
 
 type Config struct {
-	Name     string      `yam:"name"`
-	ServerID int         `yaml:"server_id"`
-	Etcd     *conf.Etcd  `yaml:"etcd"`
-	Redis    *conf.Redis `yaml:"redis"`
-	Mysql    *conf.Mysql `yaml:"mysql"`
+	Name       string      `yam:"name"`
+	ServerID   int         `yaml:"server_id"`
+	Etcd       *conf.Etcd  `yaml:"etcd"`
+	Redis      *conf.Redis `yaml:"redis"`
+	Mysql      *conf.Mysql `yaml:"mysql"`
+	GrpcServer *conf.Grpc  `yaml:"grpc_server"` // auth是grpc服务，因此肯定得有grpc配置
 }
 
 var config = new(Config)
@@ -23,7 +24,7 @@ func GetConfig() *Config {
 }
 
 func init() {
-	bytes, err := ioutil.ReadFile("./configs/auth.yaml")
+	bytes, err := ioutil.ReadFile("/Users/geyan/go/src/goim/configs/auth.yaml")
 
 	if err != nil {
 		fmt.Println("[config] failed to read yaml file: ", err)
@@ -35,5 +36,9 @@ func init() {
 		panic(err)
 	}
 
-	fmt.Printf("[config] init auth cofnig successfully, and config: %+v\n", config)
+	fmt.Printf("[config] init auth cofnig successfully\nconfig: %+v\n", config)
+	fmt.Printf("Etcd: %+v\n", config.Etcd)
+	fmt.Printf("Redis: %+v\n", config.Redis)
+	fmt.Printf("Mysql: %+v\n", config.Mysql)
+	fmt.Printf("GrpcServer: %+v\n", config.GrpcServer)
 }

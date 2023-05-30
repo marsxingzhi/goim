@@ -12,9 +12,27 @@ import (
 grpc server的封装
 */
 func NewServer(c *config.Grpc) *grpc.Server {
-	opts := make([]grpc.ServerOption, 0)
-	opts = append(opts, grpc.UnaryInterceptor(unaryInterceptor()))
-	grpcServer := grpc.NewServer(opts...)
+	//opts := make([]grpc.ServerOption, 0)
+	//opts = append(opts, grpc.UnaryInterceptor(unaryInterceptor()))
+	//
+	//keepParams := grpc.KeepaliveParams(keepalive.ServerParameters{
+	//	MaxConnectionIdle:     time.Duration(c.MaxConnectionIdle) * time.Millisecond,
+	//	MaxConnectionAge:      time.Duration(c.MaxConnectionAge) * time.Millisecond,
+	//	MaxConnectionAgeGrace: time.Duration(c.MaxConnectionAgeGrace) * time.Millisecond,
+	//	Time:                  time.Duration(c.Time) * time.Millisecond,
+	//	Timeout:               time.Duration(c.Timeout) * time.Millisecond,
+	//})
+	//opts = append(opts, keepParams)
+	//if c.StreamsLimit > 0 {
+	//	// 一个连接中最大并发Stream数
+	//	opts = append(opts, grpc.MaxConcurrentStreams(c.StreamsLimit))
+	//}
+	//if c.MaxRecvMsgSize > 0 {
+	//	// 允许接收的最大消息长度
+	//	opts = append(opts, grpc.MaxRecvMsgSize(c.MaxRecvMsgSize))
+	//}
+
+	grpcServer := grpc.NewServer()
 	return grpcServer
 }
 
