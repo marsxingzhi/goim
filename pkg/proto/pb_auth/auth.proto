@@ -25,6 +25,8 @@ message RegisterResp {
   int32 code = 1;
   string msg = 2;
   pb_user.UserInfo user_info = 3;
+  Token access_token = 4;
+  Token refresh_token = 5;
 }
 
 message LoginReq {

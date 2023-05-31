@@ -63,7 +63,18 @@ func (as *authService) Register(ctx *gin.Context, req *dto_auth.RegisterReq) *xz
 	//})
 
 	var response = new(xzhttp.Response)
-	response.Data = resp.UserInfo
+
+	var pb2dtoTransformer func(resp *pb_auth.RegisterResp) *dto_auth.RegisterResp
+
+	pb2dtoTransformer = func(resp *pb_auth.RegisterResp) *dto_auth.RegisterResp {
+		var res = new(dto_auth.RegisterResp)
+
+		res.UserInfo = resp.GetUserInfo()
+
+		return res
+	}
+
+	response.Data = pb2dtoTransformer(resp)
 	response.Code = resp.Code
 	response.Msg = resp.Msg
 

@@ -20,11 +20,11 @@ mysql:
   max_idle_time: 7200000
   charset: utf8mb4
   sources:
-    - {address: "goim-mysql-user-01:13306",username: root,password: 123123123,db: goim_user}
-    - {address: "goim-mysql-user-02:13307",username: root,password: 123123123,db: goim_user}
+    - {addr: "127.0.0.1:3306",username: root,password: 123123123,db: goim_user}
+    - {addr: "goim-mysql-user-02:13307",username: root,password: 123123123,db: goim_user}  # 集群
   replicas:
-    - {address: "goim-mysql-user-03:13308",username: root,password: 123123123,db: goim_user}
-    - {address: "goim-mysql-user-04:13309",username: root,password: 123123123,db: goim_user}
+    - {addr: "goim-mysql-user-03:13308",username: root,password: 123123123,db: goim_user}
+    - {addr: "goim-mysql-user-04:13309",username: root,password: 123123123,db: goim_user}
 grpc_server:
   name: goim_auth_server
   server_id: 1

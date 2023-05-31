@@ -1,6 +1,8 @@
 package xzmysql
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 
@@ -17,11 +19,14 @@ mysql的封装
 var cli *MysqlClient
 
 type MysqlClient struct {
-	db *gorm.DB
+	db   *gorm.DB
+	conf *config.Mysql
 }
 
+type DbFuncHandle func(db *gorm.DB) (err error)
+
 func NewMysqlClient(conf *config.Mysql) *MysqlClient {
-	cli = &MysqlClient{}
+	cli = &MysqlClient{conf: conf}
 	db, err := connectDb(conf)
 	if err != nil {
 		fmt.Println("[xzmysql] failed to new mysql client: ", err)
@@ -72,4 +77,31 @@ func connectDb(conf *config.Mysql) (*gorm.DB, error) {
 		SetConnMaxLifetime(time.Duration(conf.MaxLifetime) * time.Millisecond))
 
 	return db, nil
+}
+
+func GetDB() *gorm.DB {
+	if cli.db == nil {
+		cli.db, _ = connectDb(cli.conf)
+	}
+	return cli.db
+}
+
+// Transaction 将传入的函数参数包装成事务
+func Transaction(handle DbFuncHandle) error {
+	db := GetDB()
+	if db == nil {
+		return errors.New("database instance is empty")
+	}
+	tx := db.Begin(&sql.TxOptions{Isolation: sql.LevelRepeatableRead})
+	err := handle(tx)
+	if err != nil {
+		// 回滚
+		txerr := tx.Rollback().Error
+		if txerr != nil {
+			fmt.Printf("[xzmysql] failed to rollback: %+v\n", err)
+			//return txerr
+		}
+		return err
+	}
+	return tx.Commit().Error
 }
