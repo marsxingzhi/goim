@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	token, err := xzjwt.GenerateToken(1, 1, 3600)
+	token, _, err := xzjwt.GenerateAccessToken(1, 1, 3600)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

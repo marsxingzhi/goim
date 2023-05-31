@@ -8,3 +8,5 @@
 - [ ] 完善xzgrpc
 - [ ] 完善xzetcd
 - [ ] 补上xzhttp
+- [ ] sessionId补上，jwt有效期内无法注销
+- [ ] token验证

@@ -70,6 +70,8 @@ func (as *authService) Register(ctx *gin.Context, req *dto_auth.RegisterReq) *xz
 		var res = new(dto_auth.RegisterResp)
 
 		res.UserInfo = resp.GetUserInfo()
+		res.AccessToken = resp.GetAccessToken()
+		res.RefreshToken = resp.GetRefreshToken()
 
 		return res
 	}

@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"github.com/marsxingzhi/goim/apps/auth/internal/repo"
 	"github.com/marsxingzhi/goim/domain/model"
+	"github.com/marsxingzhi/goim/pkg/common/xzjwt"
 	"github.com/marsxingzhi/goim/pkg/common/xzmysql"
 	"github.com/marsxingzhi/goim/pkg/e"
 	"github.com/marsxingzhi/goim/pkg/proto/pb_auth"
 	"github.com/marsxingzhi/goim/pkg/proto/pb_user"
+	"golang.org/x/sync/errgroup"
 	"gorm.io/gorm"
 )
 
@@ -33,7 +35,11 @@ func (as *authService) Register(ctx context.Context, req *pb_auth.RegisterReq) (
 	//resp.Code = 0
 	//resp.UserInfo = new(pb_user.UserInfo)
 	//
-	resp = &pb_auth.RegisterResp{UserInfo: &pb_user.UserInfo{}}
+	resp = &pb_auth.RegisterResp{
+		UserInfo:     &pb_user.UserInfo{},
+		AccessToken:  &pb_auth.Token{},
+		RefreshToken: &pb_auth.Token{},
+	}
 
 	// 数据库对象
 	user := transformUser(req)
@@ -68,7 +74,8 @@ func (as *authService) Register(ctx context.Context, req *pb_auth.RegisterReq) (
 	resp.AccessToken = access
 	resp.RefreshToken = refresh
 
-	fmt.Printf("[请求成功] register req: %+v\n", req)
+	// TODO-xz sessionId 存储到redis
+	fmt.Println("[auth-server] register success...")
 	return
 }
 
@@ -85,8 +92,32 @@ func (as *authService) RefreshToken(ctx context.Context, req *pb_auth.RefreshTok
 }
 
 func (as *authService) generateToken(uid int64, platform int32) (access *pb_auth.Token, refresh *pb_auth.Token, err error) {
-	// TODO-xz 生成token
-	return nil, nil, nil
+	var eg errgroup.Group
+	access = new(pb_auth.Token)
+	refresh = new(pb_auth.Token)
+
+	eg.Go(func() error {
+		accessToken, expireAt, err := xzjwt.GenerateAccessToken(uid, int8(platform), 7*24*3600) // 7天
+		if err == nil {
+			access.Token = accessToken
+			access.Expire = expireAt
+		}
+		return err
+	})
+
+	eg.Go(func() error {
+		refreshToken, expireAt, err := xzjwt.GenerateRefreshToken(uid, int8(platform), 30*24*3600) // 30天
+		if err == nil {
+			refresh.Token = refreshToken
+			refresh.Expire = expireAt
+		}
+		return err
+	})
+
+	if err = eg.Wait(); err != nil {
+		return nil, nil, fmt.Errorf("failed to generate token: %v", err)
+	}
+	return
 }
 
 // TODO-xz  缺少不少值

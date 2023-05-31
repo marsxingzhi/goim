@@ -13,6 +13,7 @@ import (
 const (
 	JWT_SECRET = "marsxingzhi.goim.2023" // 密钥
 	JWT_ISSUER = "marsxingzhi"
+	JWT_ACCESS = "marsxingzhi_access="
 )
 
 type XzClaims struct {
@@ -27,7 +28,15 @@ type XzClaims struct {
 	jwt.StandardClaims
 }
 
-func GenerateToken(uid int64, platform int8, duration int) (string, error) {
+func GenerateAccessToken(uid int64, platform int8, duration int) (string, int64, error) {
+	return generateToken(uid, platform, duration, true)
+}
+
+func GenerateRefreshToken(uid int64, platform int8, duration int) (string, int64, error) {
+	return generateToken(uid, platform, duration, false)
+}
+
+func generateToken(uid int64, platform int8, duration int, access bool) (string, int64, error) {
 	now := time.Now()
 	claims := XzClaims{
 		Uid:       uid,
@@ -42,7 +51,12 @@ func GenerateToken(uid int64, platform int8, duration int) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	tokenStr, err := token.SignedString([]byte(JWT_SECRET))
-	return tokenStr, err
+	if access {
+		// 如果是access_token，再加点
+		tokenStr = JWT_ACCESS + tokenStr
+	}
+
+	return tokenStr, claims.ExpiresAt, err
 }
 
 func ParseToken(tokenStr string) (*XzClaims, error) {

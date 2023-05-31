@@ -1,6 +1,9 @@
 package dto_auth
 
-import "github.com/marsxingzhi/goim/pkg/proto/pb_user"
+import (
+	"github.com/marsxingzhi/goim/pkg/proto/pb_auth"
+	"github.com/marsxingzhi/goim/pkg/proto/pb_user"
+)
 
 // TODO-xz 参数校验，可以通过标签
 // 参考 https://blog.csdn.net/weixin_41922289/article/details/121432884
@@ -18,5 +21,7 @@ type RegisterReq struct {
 // 使用dto的好处：这里可以组装数据返回给端上
 // 如果直接将pb_user.UserInfo作为data返回，不利于后续扩展；而且如果pb_user.UserInfo字段很多，只想返回部分user字段的话，也只需要修改RegisterResp即可
 type RegisterResp struct {
-	UserInfo *pb_user.UserInfo `json:"user_info,omitempty"`
+	UserInfo     *pb_user.UserInfo `json:"user_info,omitempty"`
+	AccessToken  *pb_auth.Token    `json:"access_token"`
+	RefreshToken *pb_auth.Token    `json:"refresh_token"`
 }
