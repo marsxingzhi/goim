@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/marsxingzhi/goim/pkg/proto/pb_auth"
+	"github.com/marsxingzhi/goim/pkg/proto/pb_user"
 )
 
 // AuthService 服务
@@ -24,6 +25,9 @@ func NewAuthService() AuthService {
 func (s *authService) Register(ctx context.Context, req *pb_auth.RegisterReq) (resp *pb_auth.RegisterResp, err error) {
 	resp = new(pb_auth.RegisterResp)
 	resp.Msg = "注册成功啦，嘿嘿"
+	resp.Code = 0
+	resp.UserInfo = new(pb_user.UserInfo)
+
 	fmt.Printf("[测试] register req: %+v\n", req)
 	return
 }

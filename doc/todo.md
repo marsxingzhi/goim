@@ -7,3 +7,4 @@
 - [ ] grpc负载均衡和etcd还没完成
 - [ ] 完善xzgrpc
 - [ ] 完善xzetcd
+- [ ] 补上xzhttp
