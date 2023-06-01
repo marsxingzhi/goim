@@ -1,7 +1,7 @@
 name: goim_auth_gateway
 server_id: 1
 etcd:
-  endpoints: ["127.0.0.1:2379","127.0.0.1:2380","127.0.0.1:2381"]     #  这是etcd集群的节点
+  endpoints: ["127.0.0.1:2379"]     #  这是etcd集群的节点
   username:
   password:
   schema: goim
@@ -9,9 +9,9 @@ etcd:
   write_timeout: 5000
   dial_timeout: 5000
 redis:
-  address: ["goim-redis-01:7001","goim-redis-02:7002","goim-redis-03:7003","goim-redis-04:7004"]
+  address: ["127.0.0.1:6379"]
   db: 0
-  password: goim2023
+  password:
   prefix: "goim:"
 mysql:
   max_open_conns: 20
@@ -21,10 +21,10 @@ mysql:
   charset: utf8mb4
   sources:
     - {addr: "127.0.0.1:3306",username: root,password: 123123123,db: goim_user}
-    - {addr: "goim-mysql-user-02:13307",username: root,password: 123123123,db: goim_user}  # 集群
+#    - {addr: "127.0.0.1:13307",username: root,password: 123123123,db: goim_user}  # 集群
   replicas:
-    - {addr: "goim-mysql-user-03:13308",username: root,password: 123123123,db: goim_user}
-    - {addr: "goim-mysql-user-04:13309",username: root,password: 123123123,db: goim_user}
+#    - {addr: "127.0.0.1:13308",username: root,password: 123123123,db: goim_user}
+#    - {addr: "127.0.0.1:13309",username: root,password: 123123123,db: goim_user}
 grpc_server:
   name: goim_auth_server
   server_id: 1

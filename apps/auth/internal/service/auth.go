@@ -3,15 +3,19 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/marsxingzhi/goim/apps/auth/internal/config"
 	"github.com/marsxingzhi/goim/apps/auth/internal/repo"
 	"github.com/marsxingzhi/goim/domain/model"
 	"github.com/marsxingzhi/goim/pkg/common/xzjwt"
 	"github.com/marsxingzhi/goim/pkg/common/xzmysql"
+	"github.com/marsxingzhi/goim/pkg/common/xzredis"
+	"github.com/marsxingzhi/goim/pkg/constant"
 	"github.com/marsxingzhi/goim/pkg/e"
 	"github.com/marsxingzhi/goim/pkg/proto/pb_auth"
 	"github.com/marsxingzhi/goim/pkg/proto/pb_user"
 	"golang.org/x/sync/errgroup"
 	"gorm.io/gorm"
+	"strconv"
 )
 
 // AuthService 服务
@@ -23,10 +27,11 @@ type AuthService interface {
 }
 
 type authService struct {
+	conf *config.Config
 }
 
-func NewAuthService() AuthService {
-	return &authService{}
+func NewAuthService(conf *config.Config) AuthService {
+	return &authService{conf: conf}
 }
 
 func (as *authService) Register(ctx context.Context, req *pb_auth.RegisterReq) (resp *pb_auth.RegisterResp, err error) {
@@ -74,7 +79,6 @@ func (as *authService) Register(ctx context.Context, req *pb_auth.RegisterReq) (
 	resp.AccessToken = access
 	resp.RefreshToken = refresh
 
-	// TODO-xz sessionId 存储到redis
 	fmt.Println("[auth-server] register success...")
 	return
 }
@@ -92,30 +96,49 @@ func (as *authService) RefreshToken(ctx context.Context, req *pb_auth.RefreshTok
 }
 
 func (as *authService) generateToken(uid int64, platform int32) (access *pb_auth.Token, refresh *pb_auth.Token, err error) {
-	var eg errgroup.Group
+	var (
+		eg               errgroup.Group
+		accessSessionId  string
+		refreshSessionId string
+	)
 	access = new(pb_auth.Token)
 	refresh = new(pb_auth.Token)
 
 	eg.Go(func() error {
-		accessToken, expireAt, err := xzjwt.GenerateAccessToken(uid, int8(platform), 7*24*3600) // 7天
+		accessJwtToken, err := xzjwt.GenerateAccessToken(uid, int8(platform), 7*24*3600) // 7天
 		if err == nil {
-			access.Token = accessToken
-			access.Expire = expireAt
+			access.Token = accessJwtToken.Token
+			access.Expire = accessJwtToken.Expire
+			accessSessionId = accessJwtToken.SessionId
 		}
 		return err
 	})
 
 	eg.Go(func() error {
-		refreshToken, expireAt, err := xzjwt.GenerateRefreshToken(uid, int8(platform), 30*24*3600) // 30天
+		refreshJwtToken, err := xzjwt.GenerateRefreshToken(uid, int8(platform), 30*24*3600) // 30天
 		if err == nil {
-			refresh.Token = refreshToken
-			refresh.Expire = expireAt
+			refresh.Token = refreshJwtToken.Token
+			refresh.Expire = refreshJwtToken.Expire
+			refreshSessionId = refreshJwtToken.SessionId
 		}
 		return err
 	})
 
 	if err = eg.Wait(); err != nil {
 		return nil, nil, fmt.Errorf("failed to generate token: %v", err)
+	}
+
+	// sessionId 存储到redis
+	key := strconv.FormatInt(uid, 10) + strconv.Itoa(int(platform))
+	mp := make(map[string]string)
+
+	k1 := as.conf.Redis.Prefix + constant.REDIS_KEY_USER_ACCESS_TOKEN_SESSION_ID + key
+	k2 := as.conf.Redis.Prefix + constant.REDIS_KEY_USER_REFRESH_TOKEN_SESSION_ID + key
+	mp[k1] = accessSessionId
+	mp[k2] = refreshSessionId
+	if err := xzredis.MSet(mp); err != nil {
+		// 不要返回
+		fmt.Println("[auth] failed to save sessionId to redis: ", err)
 	}
 	return
 }
@@ -154,4 +177,8 @@ func modelUser2pbUser(u *model.User) *pb_user.UserInfo {
 	pbUser.BirthTs = u.Birth
 	pbUser.Mobile = u.Mobile
 	return pbUser
+}
+
+func (as *authService) cacheToken(access *pb_auth.Token, refresh *pb_auth.Token, key string) {
+
 }

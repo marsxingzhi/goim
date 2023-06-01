@@ -3,6 +3,7 @@ package xzjwt
 import (
 	"errors"
 	"fmt"
+	"github.com/marsxingzhi/goim/pkg/utils"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -16,6 +17,14 @@ const (
 	JWT_ACCESS = "marsxingzhi_access="
 )
 
+type JwtToken struct {
+	Token     string
+	Expire    int64 // 过期时间
+	SessionId string
+	Uid       int64
+	Platform  int8
+}
+
 type XzClaims struct {
 	Uid      int64 `json:"uid"`
 	Platform int8  `json:"platform"`
@@ -28,20 +37,20 @@ type XzClaims struct {
 	jwt.StandardClaims
 }
 
-func GenerateAccessToken(uid int64, platform int8, duration int) (string, int64, error) {
+func GenerateAccessToken(uid int64, platform int8, duration int) (*JwtToken, error) {
 	return generateToken(uid, platform, duration, true)
 }
 
-func GenerateRefreshToken(uid int64, platform int8, duration int) (string, int64, error) {
+func GenerateRefreshToken(uid int64, platform int8, duration int) (*JwtToken, error) {
 	return generateToken(uid, platform, duration, false)
 }
 
-func generateToken(uid int64, platform int8, duration int, access bool) (string, int64, error) {
+func generateToken(uid int64, platform int8, duration int, access bool) (*JwtToken, error) {
 	now := time.Now()
 	claims := XzClaims{
 		Uid:       uid,
 		Platform:  platform,
-		SessionID: uuid.NewString(),
+		SessionID: utils.MD5(uuid.NewString()),
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: now.Add(time.Second * time.Duration(duration)).Unix(), // 过期时间
 			Issuer:    JWT_ISSUER,                                            // 签发人
@@ -56,7 +65,15 @@ func generateToken(uid int64, platform int8, duration int, access bool) (string,
 		tokenStr = JWT_ACCESS + tokenStr
 	}
 
-	return tokenStr, claims.ExpiresAt, err
+	jwtToken := &JwtToken{
+		Token:     tokenStr,
+		Expire:    claims.ExpiresAt,
+		SessionId: claims.SessionID,
+		Uid:       uid,
+		Platform:  platform,
+	}
+
+	return jwtToken, err
 }
 
 func ParseToken(tokenStr string) (*XzClaims, error) {

@@ -68,7 +68,7 @@ func (h *Hub) Update(ctx *gin.Context) {
 		return
 	}
 
-	// TODO 获取uid和platform，进行验证。从ctx中获取
+	// TODO 获取uid和platform，进行验证。从ctx中获取!!!
 
 	client := &Client{hub: h, conn: conn, send: make(chan []byte, 256)}
 	client.hub.register <- client

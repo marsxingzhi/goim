@@ -3,7 +3,6 @@ package xzredis
 import (
 	"context"
 	"fmt"
-
 	"github.com/go-redsync/redsync/v4"
 	"github.com/go-redsync/redsync/v4/redis/goredis/v9"
 	"github.com/marsxingzhi/goim/pkg/config"
@@ -15,18 +14,25 @@ redis的封装
 */
 
 var (
-	Cli *RedisClient
+	cli *RedisClient
 )
 
 type RedisClient struct {
-	Client   *redis.ClusterClient
+	Client   *redis.Client
 	RedsSync *redsync.Redsync
 }
 
-func NewRedisClient(conf *config.Redis) *redis.ClusterClient {
+func NewRedisClient(conf *config.Redis) *redis.Client {
 	// 1. 创建集群redis
-	client := redis.NewClusterClient(&redis.ClusterOptions{
-		Addrs: conf.Address,
+	//client := redis.NewClusterClient(&redis.ClusterOptions{
+	//	Addrs: conf.Address,
+	//})
+
+	// 单机redis
+	client := redis.NewClient(&redis.Options{
+		Addr:     conf.Address[0],
+		Password: conf.Password,
+		DB:       conf.Db,
 	})
 
 	// 2. 判断是否能够链接到redis
@@ -40,7 +46,7 @@ func NewRedisClient(conf *config.Redis) *redis.ClusterClient {
 	rsPool := goredis.NewPool(client)
 	redisSync := redsync.New(rsPool)
 
-	Cli = &RedisClient{
+	cli = &RedisClient{
 		Client:   client,
 		RedsSync: redisSync,
 	}
