@@ -19,3 +19,8 @@ type GrpcDialOption struct {
 	ServiceName string
 	Etcd        *Etcd
 }
+
+type GrpcServer struct {
+	Name string `yaml:"name"`
+	//Cert *Cert  TODO 证书先不加了
+}

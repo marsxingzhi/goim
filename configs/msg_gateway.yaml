@@ -1,0 +1,68 @@
+name: goim_msg_gateway_server
+server_id: 1
+grpc_server:
+  name: goim_msg_gateway_server
+  server_id: 1
+  port: 7300
+  max_connection_idle: 0
+  max_connection_age: 0
+  max_connection_age_grace: 0
+  time: 7200000
+  timeout: 20000
+  connection_limit: 2000
+  streams_limit: 2000
+  max_recv_msg_size: 4096
+  credential:
+    cert_file: ./configs/tls/grpc/server.pem
+    key_file: ./configs/tls/grpc/server.key
+    enabled: true
+etcd:
+  endpoints: ["127.0.0.1:2379","127.0.0.1:2380","127.0.0.1:2381"]     #  这是etcd集群的节点
+  username:
+  password:
+  schema: goim
+  read_timeout: 5000
+  write_timeout: 5000
+  dial_timeout: 5000
+redis:
+  address: ["goim-redis-01:7001","goim-redis-02:7002","goim-redis-03:7003","goim-redis-04:7004"]
+  db: 0
+  password: goim2023
+  prefix: "goim:"
+
+
+msg_server:
+  name: goim_msg_server
+
+ws_server:
+  server_id:
+  name: goim_ws_server
+  port: 7301
+  write_wait: 10000  # 单位毫秒，下面一样
+  pong_wait: 600000
+  ping_period: 540000
+  max_msg_size: 4096
+  read_buffer_size: 4096
+  write_buffer_size: 4096
+  header_length: 4
+  chan_client_send_msg: 100
+  chan_server_read_msg: 1000
+  chan_server_register: 1000
+  chan_server_unregister: 1000
+  max_connections: 20000
+  min_time_interval: -1
+
+
+
+#mysql:
+#  max_open_conns: 20
+#  max_idle_conns: 10
+#  max_lifetime: 120000
+#  max_idle_time: 7200000
+#  charset: utf8mb4
+#  sources:
+#    - {addr: "127.0.0.1:3306",username: root,password: 123123123,db: goim_user}
+#    - {addr: "goim-mysql-user-02:13307",username: root,password: 123123123,db: goim_user}  # 集群
+#  replicas:
+#    - {addr: "goim-mysql-user-03:13308",username: root,password: 123123123,db: goim_user}
+#    - {addr: "goim-mysql-user-04:13309",username: root,password: 123123123,db: goim_user}

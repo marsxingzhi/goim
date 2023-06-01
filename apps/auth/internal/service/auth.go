@@ -136,7 +136,7 @@ func transformUser(req *pb_auth.RegisterReq) *model.User {
 
 	user.Email = req.GetEmail()
 	user.Mobile = req.GetMobile()
-	//user.ServerId
+	user.ServerId = 1 // TODO-xz 暂时固定住
 	//user.CityId
 	//user.AvatarKey
 

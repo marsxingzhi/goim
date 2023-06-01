@@ -99,7 +99,7 @@ func Transaction(handle DbFuncHandle) error {
 		txerr := tx.Rollback().Error
 		if txerr != nil {
 			fmt.Printf("[xzmysql] failed to rollback: %+v\n", err)
-			//return txerr
+			//return txerr   不能返回txerr，回滚成功，那么txerr为nil，这样该方法返回的err就为nil，这个是有问题的
 		}
 		return err
 	}

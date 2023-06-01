@@ -1,4 +1,4 @@
-name: goim_api_gateway
+name: goim_auth_gateway
 server_id: 1
 etcd:
   endpoints: ["127.0.0.1:2379","127.0.0.1:2380","127.0.0.1:2381"]     #  这是etcd集群的节点
