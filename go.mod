@@ -8,8 +8,8 @@ require (
 	github.com/go-redsync/redsync/v4 v4.8.1
 	github.com/google/uuid v1.3.0
 	github.com/redis/go-redis/v9 v9.0.5
-	go.etcd.io/etcd/api/v3 v3.5.9
-	go.etcd.io/etcd/client/v3 v3.5.9
+	go.etcd.io/etcd/api/v3 v3.5.0-beta.4
+	go.etcd.io/etcd/client/v3 v3.5.0-beta.4
 	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9
 	google.golang.org/grpc v1.55.0
 	google.golang.org/protobuf v1.30.0
@@ -35,6 +35,7 @@ require (
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect

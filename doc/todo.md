@@ -12,8 +12,12 @@
 - [ ] token验证
 - [ ] grpc client
 - [ ] 由于没有将sessionId存储到redis，很多中间件都没写验证逻辑
+- [ ] 学习websocket的 golang库
 
-
+## 需要学习的
+- [ ] etcd
+- [ ] grpc证书，客户端拨号
+- [ ] gorilla/websocket
 
 ## serviceId   
 ios-android-web，我这里不考虑电脑端
