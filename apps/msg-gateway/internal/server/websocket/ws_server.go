@@ -3,6 +3,7 @@ package websocket
 import (
 	"github.com/marsxingzhi/goim/apps/msg-gateway/internal/config"
 	"github.com/marsxingzhi/goim/pkg/common/xzgin"
+	"github.com/marsxingzhi/goim/pkg/middleware"
 )
 
 type WsServer interface {
@@ -18,13 +19,12 @@ type wsServer struct {
 
 func NewWsServer(conf *config.Config) WsServer {
 	ws := &wsServer{hub: newHub(), conf: conf, ginServer: xzgin.NewGinServer()}
-	// TODO 中间件 auth
 	// 中间件需要加在路由的前面
+	ws.ginServer.Use(middleware.JwtAuth())
 	ws.addRouter()
 	return ws
 }
 
-// Run TODO 对请求进行验证
 func (ws *wsServer) Run() {
 	go ws.hub.run()
 

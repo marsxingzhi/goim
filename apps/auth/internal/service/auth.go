@@ -129,7 +129,7 @@ func (as *authService) generateToken(uid int64, platform int32) (access *pb_auth
 	}
 
 	// sessionId 存储到redis
-	key := strconv.FormatInt(uid, 10) + strconv.Itoa(int(platform))
+	key := strconv.FormatInt(uid, 10) + ":" + strconv.Itoa(int(platform))
 	mp := make(map[string]string)
 
 	k1 := as.conf.Redis.Prefix + constant.REDIS_KEY_USER_ACCESS_TOKEN_SESSION_ID + key
@@ -146,22 +146,22 @@ func (as *authService) generateToken(uid int64, platform int32) (access *pb_auth
 // TODO-xz  缺少不少值
 func transformUser(req *pb_auth.RegisterReq) *model.User {
 	var user = new(model.User)
-	//user.Uid = uint64(time.Now().Unix()) // TODO-xz 雪花算法  不能再这里就生成，得在入库时
-	//user.Aid
+	user.Platform = uint(req.GetPlatform())
 	user.Password = req.GetPassword()
-	//user.Did
-	//user.Status
 	user.Nickname = req.GetNickname()
 	user.Firstname = req.GetFirstname()
 	user.Lastname = req.GetLastname()
 	user.Gender = int8(req.GetGender())
-	//user.Birth
-
 	user.Email = req.GetEmail()
 	user.Mobile = req.GetMobile()
 	user.ServerId = 1 // TODO-xz 暂时固定住
 	//user.CityId
 	//user.AvatarKey
+	//user.Uid = uint64(time.Now().Unix()) // TODO-xz 雪花算法  不能再这里就生成，得在入库时
+	//user.Aid
+	//user.Birth
+	//user.Did
+	//user.Status
 
 	return user
 }

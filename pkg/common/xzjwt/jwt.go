@@ -89,9 +89,6 @@ func ParseToken(tokenStr string) (*XzClaims, error) {
 	if claims, ok := token.Claims.(*XzClaims); ok && token.Valid {
 		return claims, nil
 	}
-
-	// TODO 二次验证SessionID
-
 	return nil, errors.New("this is valid token")
 }
 

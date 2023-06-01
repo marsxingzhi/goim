@@ -20,6 +20,7 @@ var (
 type RedisClient struct {
 	Client   *redis.Client
 	RedsSync *redsync.Redsync
+	Prefix   string // 当前服务器上的redis加一个前缀
 }
 
 func NewRedisClient(conf *config.Redis) *redis.Client {
@@ -49,6 +50,7 @@ func NewRedisClient(conf *config.Redis) *redis.Client {
 	cli = &RedisClient{
 		Client:   client,
 		RedsSync: redisSync,
+		Prefix:   conf.Prefix,
 	}
 	return client
 }
