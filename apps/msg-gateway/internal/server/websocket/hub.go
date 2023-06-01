@@ -3,6 +3,8 @@ package websocket
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/marsxingzhi/goim/pkg/constant"
+	"github.com/marsxingzhi/goim/pkg/metadata"
 	"log"
 )
 
@@ -68,9 +70,11 @@ func (h *Hub) Update(ctx *gin.Context) {
 		return
 	}
 
-	// TODO 获取uid和platform，进行验证。从ctx中获取!!!
+	uid := metadata.GetInt64(ctx, constant.USER_UID)
+	platform := metadata.GetInt8(ctx, constant.USER_PLATFORM)
+	fmt.Printf("[websocket] Update uid: %v, platform: %v\n", uid, platform)
 
-	client := &Client{hub: h, conn: conn, send: make(chan []byte, 256)}
+	client := &Client{hub: h, conn: conn, send: make(chan []byte, 256), uid: uid, platform: platform}
 	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in

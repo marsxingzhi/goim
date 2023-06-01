@@ -154,6 +154,7 @@ func transformUser(req *pb_auth.RegisterReq) *model.User {
 	user.Gender = int8(req.GetGender())
 	user.Email = req.GetEmail()
 	user.Mobile = req.GetMobile()
+	// TODO ServerId的设计！！！
 	user.ServerId = 1 // TODO-xz 暂时固定住
 	//user.CityId
 	//user.AvatarKey

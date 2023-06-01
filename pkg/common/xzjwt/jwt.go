@@ -14,7 +14,7 @@ import (
 const (
 	JWT_SECRET = "marsxingzhi.goim.2023" // 密钥
 	JWT_ISSUER = "marsxingzhi"
-	JWT_ACCESS = "marsxingzhi_access="
+	JWT_ACCESS = "jwt_access="
 )
 
 type JwtToken struct {
@@ -34,6 +34,7 @@ type XzClaims struct {
 	// 由于token是无状态的，那么只要是在有效期内都是有效的，那么就会存在注销登录等场景下token还有效的问题。
 	// 因此这里是sessionID保存到redis中，进行二次验证。
 	SessionID string `json:"session_id"`
+	Access    bool   `json:"access"`
 	jwt.StandardClaims
 }
 
@@ -51,6 +52,7 @@ func generateToken(uid int64, platform int8, duration int, access bool) (*JwtTok
 		Uid:       uid,
 		Platform:  platform,
 		SessionID: utils.MD5(uuid.NewString()),
+		Access:    access,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: now.Add(time.Second * time.Duration(duration)).Unix(), // 过期时间
 			Issuer:    JWT_ISSUER,                                            // 签发人
@@ -62,7 +64,9 @@ func generateToken(uid int64, platform int8, duration int, access bool) (*JwtTok
 	tokenStr, err := token.SignedString([]byte(JWT_SECRET))
 	if access {
 		// 如果是access_token，再加点
-		tokenStr = JWT_ACCESS + tokenStr
+		// TODO 这里如果加了，那么在还得使用原始的tokenStr去解析token，然后发现sessionId是refresh的sessionId
+		// 因此，还是不要在这里加
+		//tokenStr = JWT_ACCESS + tokenStr
 	}
 
 	jwtToken := &JwtToken{

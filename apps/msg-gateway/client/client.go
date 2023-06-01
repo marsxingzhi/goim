@@ -23,7 +23,12 @@ func main() {
 	u := url.URL{Scheme: "ws", Host: *addr, Path: "/ws"}
 	log.Printf("connecting to %s", u.String())
 
-	c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
+	// TODO@xz 测试
+	headers := map[string][]string{}
+	token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjE2ODU2NDUzODksInBsYXRmb3JtIjoxLCJzZXNzaW9uX2lkIjoiZTc1ZjAyYjg0ZmZiY2FhZGY4ZTM4ZDRlMDQ1M2ZmZWEiLCJhY2Nlc3MiOnRydWUsImV4cCI6MTY4NjI1MDE4OSwiaWF0IjoxNjg1NjQ1Mzg5LCJpc3MiOiJtYXJzeGluZ3poaSJ9.ScH7ZIGbCdMa5GtoD3BeGKbd6f-XZK9XESIc9yl6pfk"
+	headers["Authorization"] = []string{token}
+
+	c, _, err := websocket.DefaultDialer.Dial(u.String(), headers)
 	if err != nil {
 		log.Fatal("dial:", err)
 	}
